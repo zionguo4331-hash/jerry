@@ -1,0 +1,31 @@
+name: AI Daily
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # UTC 0:00 = 北京时间 8:00
+  workflow_dispatch:  # 支持手动触发
+
+jobs:
+  ai-daily:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          cd ai-daily
+          pip install -r requirements.txt
+
+      - name: Run AI Daily
+        env:
+          ZHIPU_API_KEY: ${{ secrets.ZHIPU_API_KEY }}
+          SERVER_SEND_KEY: ${{ secrets.SERVER_SEND_KEY }}
+        run: |
+          cd ai-daily
+          python main.py
