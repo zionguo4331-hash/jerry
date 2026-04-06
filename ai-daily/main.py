@@ -6,6 +6,7 @@ from fetch_github_trending import fetch_github_trending
 from fetch_producthunt import fetch_producthunt
 from generate_summary import generate_summary
 from send_wechat import send_wechat
+from save_obsidian import save_to_obsidian
 
 
 def main():
@@ -28,6 +29,9 @@ def main():
 
     title = f"AI 日报 - {datetime.now().strftime('%Y-%m-%d')}"
     send_wechat(title, summary)
+
+    print("\n[5/5] 保存到 Obsidian...")
+    save_to_obsidian(summary)
 
     print(f"\n=== AI Daily 完成 {datetime.now()} ===")
     return summary
