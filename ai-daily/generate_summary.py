@@ -38,42 +38,52 @@ def generate_summary(x_posts, github_trending, producthunt):
 def _build_prompt(x_posts, github_trending, producthunt):
     """构建 LLM Prompt"""
     x_section = "\n".join([
-        f"- @{p['author']} ({p['published']}): {p.get('title', '')} {p.get('summary', '')}"
-        for p in x_posts[:20]
+        f"- @{p['author']}: {p.get('title', '')} {p.get('summary', '')}"
+        for p in x_posts[:30]
     ]) if x_posts else "（暂无内容）"
 
     github_section = "\n".join([
-        f"- [{r['name']}]({r['url']}) {r.get('language', '')} | {r.get('stars_today', '')} | {r.get('description', '')}"
-        for r in github_trending[:15]
+        f"- {r['name']} | {r.get('language', '')} | {r.get('stars_today', '')} | {r.get('description', '')}"
+        for r in github_trending[:20]
     ]) if github_trending else "（暂无内容）"
 
     ph_section = "\n".join([
         f"- {p['name']} | {p.get('description', '')} | 投票: {p.get('votes', '')}"
-        for p in producthunt[:15]
+        for p in producthunt[:20]
     ]) if producthunt else "（暂无内容）"
 
-    return f"""请根据以下信息生成一份 AI 日报摘要，格式要求：
-
-# AI 日报 - {__import__('datetime').datetime.now().strftime('%Y-%m-%d')}
-
-## 一、AI 专家动态
-（汇总 X 上专家的最新观点，提炼核心要点，每条 1-2 句话）
-{x_section}
-
-## 二、GitHub 热门项目
-（列出增长最快的项目，说明项目用途和亮点）
-{github_section}
-
-## 三、Product Hunt 热门产品
-（介绍今日热门产品，一句话说明功能）
-{ph_section}
-
-## 四、今日总结
-（用 3-5 句话总结今天 AI 领域最值得关注的趋势和事件）
+    return f"""你是一个专业的科技主编。请每天阅读原始抓取数据（包含 AI 专家推文、GitHub 趋势、Product Hunt 产品）。
+你需要剔除闲聊、无意义的转发和技术细节，提取出最有价值的信息，并严格按照以下 Markdown 格式生成微信早报。
 
 要求：
-1. 中文输出
-2. 语言精炼，避免废话
-3. 重点突出，有洞察
-4. 保留原文链接方便深入阅读
-"""
+1. 语气简练、专业、客观，绝对不要有废话。
+2. 每一个条目必须包含：名称、一句话解释核心价值/观点、对受众的意义。
+3. 请使用 Emoji 作为视觉分隔。
+4. 总字数控制在 800 字以内，适合手机端快速阅读。
+
+【原始数据】：
+
+## AI 专家动态
+{x_section}
+
+## GitHub Trending
+{github_section}
+
+## Product Hunt
+{ph_section}
+
+【输出格式】：
+# 🌅 每日 AI 与科技速递 {__import__('datetime').datetime.now().strftime('%Y-%m-%d')}
+
+## 🧠 专家前沿洞察 (挑选最有价值的 3-5 条)
+* 🗣️ **[专家姓名]**：[一句话提炼观点或他推荐的新技术]
+  - 💡 **价值点**：[这对行业或开发者意味着什么]
+
+## 💻 GitHub 飙升开源库 (挑选最有潜力的 3-5 个)
+* 🔥 **[项目名称]** (语言/主要技术标签)
+  - 🛠️ **一句话简介**：[这个项目到底能用来解决什么问题？]
+  - 🌟 **亮点**：[例如：取代了传统的 XXX / 体积只有几 KB]
+
+## 🚀 Product Hunt 热门新奇特 (挑选最创新的 3 个)
+* 🦄 **[产品名称]** - 🎯 **一句话简介**：[它满足了什么具体场景的需求？]"""
+
