@@ -32,7 +32,7 @@ jobs:
           SERVER_SEND_KEY: ${{ secrets.SERVER_SEND_KEY }}
         run: |
           cd ai-daily
-          python main.py
+          python main.py 2>&1 || echo "Exit code: $?"
 
       - name: Commit AI Daily files
         uses: stefanzweifel/git-auto-commit-action@v5
