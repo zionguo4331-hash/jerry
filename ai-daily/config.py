@@ -34,6 +34,8 @@ ZHIPU_API_KEY = os.environ.get("ZHIPU_API_KEY", "")
 ZHIPU_API_URL = "https://open.bigmodel.cn/api/paas/v4/chat/completions"
 ZHIPU_MODEL = "glm-4-flash"
 
-# Server酱
-SERVER_SEND_KEY = os.environ.get("SERVER_SEND_KEY", "SCT333682T5018PLxaMo2NjVXF7qPihAek")
+# Server酱 - 支持多个微信推送
+SERVER_SEND_KEYS = os.environ.get("SERVER_SEND_KEYS", "SCT333682T5018PLxaMo2NjVXF7qPihAek,SCT336623Tzt38wyz3BK1FOPiMimjS39NT")
+if isinstance(SERVER_SEND_KEYS, str):
+    SERVER_SEND_KEYS = [k.strip() for k in SERVER_SEND_KEYS.split(",") if k.strip()]
 SERVER_API_URL = "https://sctapi.ftqq.com"

@@ -1,11 +1,13 @@
 import requests
 import json
+from datetime import datetime
 from config import ZHIPU_API_KEY, ZHIPU_API_URL, ZHIPU_MODEL
 
 
 def generate_summary(x_posts, github_trending, producthunt):
     """调用智谱 GLM-4-flash 生成 AI 日报摘要"""
-    prompt = _build_prompt(x_posts, github_trending, producthunt)
+    today = datetime.now().strftime('%Y-%m-%d')
+    prompt = _build_prompt(x_posts, github_trending, producthunt, today)
 
     headers = {
         "Authorization": f"Bearer {ZHIPU_API_KEY}",
@@ -17,7 +19,7 @@ def generate_summary(x_posts, github_trending, producthunt):
         "messages": [
             {
                 "role": "system",
-                "content": """你是一位服务于资深开发者的「高级技术情报分析师」。请阅读我提供的原始抓取数据（包含 AI 专家推文、GitHub 趋势、Product Hunt 产品），为其撰写每日情报内参。
+                "content": f"""你是一位服务于资深开发者的「高级技术情报分析师」。请阅读我提供的原始抓取数据（包含 AI 专家推文、GitHub 趋势、Product Hunt 产品），为其撰写每日情报内参。
 
 【核心原则】
 1. 严禁使用重复的 Emoji 表情符号，并用采用极简、严肃的纯文字排版。
@@ -27,7 +29,7 @@ def generate_summary(x_posts, github_trending, producthunt):
 
 【排版与内容输出规范（严格按此格式生成）】
 
-# 每日科技与 AI 情报内参 (YYYY-MM-DD)
+# 每日科技与 AI 情报内参 ({today})
 
 ### 📌 今日情报总览
 （请基于今天的所有数据，用 80-150 字的高度凝练语言，总结出今天科技圈/开源界最核心的 1-2 个技术演进趋势或重大突破，让我一眼看透全局脉络。）
@@ -72,7 +74,7 @@ def generate_summary(x_posts, github_trending, producthunt):
     return data["choices"][0]["message"]["content"]
 
 
-def _build_prompt(x_posts, github_trending, producthunt):
+def _build_prompt(x_posts, github_trending, producthunt, today):
     """构建 LLM Prompt"""
     x_section = "\n".join([
         f"- @{p['author']}: {p.get('title', '')} {p.get('summary', '')}"
@@ -89,7 +91,7 @@ def _build_prompt(x_posts, github_trending, producthunt):
         for p in producthunt[:20]
     ]) if producthunt else "（暂无内容）"
 
-    return f"""【原始数据】
+    return f"""【原始数据 - 日期：{today}】
 
 ## AI 专家推文
 {x_section}
@@ -100,4 +102,4 @@ def _build_prompt(x_posts, github_trending, producthunt):
 ## Product Hunt
 {ph_section}
 
-请严格按照上述格式要求生成今日情报内参。"""
+请严格按照上述格式要求生成今日情报内参。日期必须是 {today}，格式如：# 每日科技与 AI 情报内参 ({today})"""
