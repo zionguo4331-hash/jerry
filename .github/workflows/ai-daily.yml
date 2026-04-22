@@ -2,7 +2,7 @@ name: AI Daily
 
 on:
   schedule:
-    - cron: '0 0 * * *'  # UTC 0:00 = 北京时间 8:00
+    - cron: '0 2 * * *'  # UTC 2:00 = 北京时间 10:00
   workflow_dispatch:
 
 jobs:
@@ -29,7 +29,7 @@ jobs:
       - name: Run AI Daily
         env:
           ZHIPU_API_KEY: ${{ secrets.ZHIPU_API_KEY }}
-          SERVER_SEND_KEY: ${{ secrets.SERVER_SEND_KEY }}
+          SERVER_SEND_KEYS: ${{ secrets.SERVER_SEND_KEYS }}
         run: |
           cd ai-daily
           python main.py 2>&1 || echo "Exit code: $?"
