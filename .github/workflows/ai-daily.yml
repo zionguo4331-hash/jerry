@@ -2,7 +2,7 @@ name: AI Daily
 
 on:
   schedule:
-    - cron: '0 2 * * *'  # UTC 2:00 = 北京时间 10:00
+    - cron: '0 19 * * *'  # UTC 19:00 = 北京时间次日 3:00
   workflow_dispatch:
 
 jobs:
