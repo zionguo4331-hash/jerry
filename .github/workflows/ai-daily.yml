@@ -27,6 +27,7 @@ jobs:
       - name: Run AI Daily
         env:
           ZHIPU_API_KEY: ${{ secrets.ZHIPU_API_KEY }}
+          SERVER_SEND_KEY: ${{ secrets.SERVER_SEND_KEY }}
           SERVER_SEND_KEYS: ${{ secrets.SERVER_SEND_KEYS }}
         run: |
           cd ai-daily
