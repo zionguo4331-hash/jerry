@@ -13,8 +13,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -32,7 +30,7 @@ jobs:
           SERVER_SEND_KEYS: ${{ secrets.SERVER_SEND_KEYS }}
         run: |
           cd ai-daily
-          python main.py 2>&1 || echo "Exit code: $?"
+          python main.py
 
       - name: Commit AI Daily files
         uses: stefanzweifel/git-auto-commit-action@v5
